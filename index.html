@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CicloSmart | Marketplace de sobrantes de construcción</title>
+  <meta name="description" content="CicloSmart — Compra y vende materiales sobrantes de obra. Reduce costos, residuos y tiempos con un marketplace ágil y seguro." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="#home" aria-label="CicloSmart Inicio">
+        <svg class="logo" width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M8.5 3.5a8 8 0 1 1-2.7 15.5" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 2v4h4" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="8" cy="20" r="3" fill="#16a34a"/>
+        </svg>
+        <span class="brand-name">CicloSmart</span>
+      </a>
+      <nav class="nav">
+        <a href="#catalogo" class="nav-link">Catálogo</a>
+        <a href="#vender" class="nav-link">Vender</a>
+        <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+        <button id="loginBtn" class="btn ghost">
+          <span id="loginLabel">Ingresar</span>
+        </button>
+        <button id="cartBtn" class="btn primary">
+          Carrito <span id="cartCount" class="badge">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Hero -->
+    <section id="home" class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1>Convierte tus <span class="accent">sobrantes de obra</span> en oportunidad</h1>
+          <p>Compra y vende materiales nuevos o sin uso: acero, madera, enchapes, pintura, eléctricos y más. Menos desperdicio, más valor.</p>
+          <div class="hero-actions">
+            <a href="#catalogo" class="btn primary lg">Explorar materiales</a>
+            <a href="#vender" class="btn outline lg">Publicar un sobrante</a>
+          </div>
+          <div class="trust">
+            <span>♻️ Economía circular</span><span>🔒 Operaciones seguras</span><span>🚚 Envíos o recojo</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="mock-card">
+            <div class="thumb">🧱</div>
+            <div class="lines"><b>Varilla corrugada 3/8"</b><span>Acero • Nuevo • Lima</span><i>S/ 9.50</i></div>
+          </div>
+          <div class="mock-card">
+            <div class="thumb">🎨</div>
+            <div class="lines"><b>Pintura látex 5 gal</b><span>Acabados • Nuevo • Miraflores</span><i>S/ 170.00</i></div>
+          </div>
+          <div class="mock-card">
+            <div class="thumb">🪵</div>
+            <div class="lines"><b>Madera 2x4</b><span>Madera • Como nuevo • Surco</span><i>S/ 220.00</i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section alt" id="categorias">
+      <div class="container">
+        <div class="section-head">
+          <h2>Explora por categorías</h2>
+          <div class="search">
+            <input id="searchInput" type="search" placeholder="Buscar por nombre, categoría o distrito…" />
+            <button id="searchBtn" class="btn">Buscar</button>
+          </div>
+        </div>
+        <div class="cat-grid">
+          <button class="cat" data-cat="">Todas</button>
+          <button class="cat" data-cat="Acero">Acero</button>
+          <button class="cat" data-cat="Madera">Madera</button>
+          <button class="cat" data-cat="Acabados">Acabados</button>
+          <button class="cat" data-cat="Herramientas">Herramientas</button>
+          <button class="cat" data-cat="Eléctricos">Eléctricos</button>
+          <button class="cat" data-cat="Sanitarios">Sanitarios</button>
+          <button class="cat" data-cat="Varios">Varios</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalog -->
+    <section class="section" id="catalogo">
+      <div class="container">
+        <div class="toolbar">
+          <div class="selects">
+            <select id="conditionFilter" aria-label="Estado">
+              <option value="">Todos los estados</option>
+              <option>Nuevo</option>
+              <option>Como nuevo</option>
+              <option>Usado</option>
+            </select>
+            <select id="sortSelect" aria-label="Ordenar">
+              <option value="relevance">Relevancia</option>
+              <option value="priceAsc">Precio: menor a mayor</option>
+              <option value="priceDesc">Precio: mayor a menor</option>
+              <option value="newest">Más recientes</option>
+            </select>
+          </div>
+          <a href="#vender" class="btn outline">+ Publicar</a>
+        </div>
+        <div id="catalogGrid" class="grid"></div>
+      </div>
+    </section>
+
+    <!-- Sell -->
+    <section class="section alt" id="vender">
+      <div class="container">
+        <div class="section-head">
+          <h2>Publica un sobrante</h2>
+          <p class="muted">Regístrate o inicia sesión para publicar. Las publicaciones se almacenan localmente para esta demo.</p>
+        </div>
+        <form id="sellForm" class="form-grid">
+          <div class="field">
+            <label>Título</label>
+            <input name="title" required placeholder="p.ej., 25 sacos de cemento tipo I" />
+          </div>
+          <div class="field">
+            <label>Categoría</label>
+            <select name="category" required>
+              <option>Acero</option><option>Madera</option><option>Acabados</option><option>Herramientas</option><option>Eléctricos</option><option>Sanitarios</option><option>Varios</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Estado</label>
+            <select name="condition" required>
+              <option>Nuevo</option><option>Como nuevo</option><option>Usado</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Precio (S/)</label>
+              <input name="price" type="number" step="0.01" required />
+            </div>
+            <div class="field">
+              <label>Cantidad</label>
+              <input name="qty" type="number" min="1" value="1" required />
+            </div>
+          </div>
+          <div class="field">
+            <label>Ubicación</label>
+            <input name="location" placeholder="Lima, Perú" required />
+          </div>
+          <div class="field">
+            <label>Descripción</label>
+            <textarea name="description" rows="3" placeholder="Detalles, marca, lote, medidas…"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Publicar ahora</button>
+            <button class="btn" type="reset">Limpiar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="como-funciona">
+      <div class="container">
+        <div class="section-head">
+          <h2>Cómo funciona</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span><b>Publica</b><p>Sube tu sobrante con fotos, precio y ubicación.</p></div>
+          <div class="step"><span class="step-num">2</span><b>Acuerda</b><p>Coordina entrega: envío estándar/exprés o recojo.</p></div>
+          <div class="step"><span class="step-num">3</span><b>Listo</b><p>Reduce residuos, recupera costos y gana tiempo.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Drawer Cart -->
+    <aside id="cartDrawer" class="drawer" aria-hidden="true" aria-label="Carrito de compras">
+      <div class="drawer-head">
+        <h3>Tu carrito</h3>
+        <button id="closeCart" class="icon" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="drawer-foot">
+        <div class="totals">
+          <div><span>Subtotal</span><strong id="cartSubtotal">S/ 0.00</strong></div>
+          <div><span>Envío estimado</span><strong id="cartShipping">S/ 0.00</strong></div>
+          <div class="grand"><span>Total</span><strong id="cartTotal">S/ 0.00</strong></div>
+        </div>
+        <a href="#pago" class="btn primary full" id="goCheckout">Proceder al pago</a>
+      </div>
+    </aside>
+
+    <!-- Checkout -->
+    <section class="section alt" id="pago">
+      <div class="container">
+        <div class="section-head">
+          <h2>Despacho y pago</h2>
+        </div>
+        <form id="checkoutForm" class="form-grid">
+          <div class="field"><label>Nombre completo</label><input name="fullName" required /></div>
+          <div class="field"><label>Teléfono</label><input name="phone" required /></div>
+          <div class="field"><label>Dirección</label><input name="address" required /></div>
+          <div class="row">
+            <div class="field"><label>Ciudad</label><input name="city" value="Lima" required /></div>
+            <div class="field"><label>Distrito</label><input name="district" placeholder="p.ej., Miraflores" required /></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Método de envío</label>
+              <select name="shippingMethod" required>
+                <option value="pickup">Recojo (S/ 0)</option>
+                <option value="standard">Estándar 48–72h (S/ 20)</option>
+                <option value="express">Exprés 24h (S/ 35)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Método de pago</label>
+              <select name="paymentMethod" required>
+                <option>Contraentrega</option>
+                <option>Tarjeta</option>
+                <option>Transferencia</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions"><button class="btn primary" type="submit">Confirmar pedido</button></div>
+        </form>
+        <div id="orderResult" class="order-result" hidden></div>
+      </div>
+    </section>
+
+    <!-- Orders -->
+    <section class="section" id="pedidos">
+      <div class="container">
+        <div class="section-head"><h2>Mis pedidos</h2></div>
+        <div id="ordersList" class="orders"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> CicloSmart — Prototipo</div>
+      <nav class="foot-nav">
+        <a href="#home">Inicio</a><a href="#catalogo">Catálogo</a><a href="#vender">Vender</a><a href="#como-funciona">Cómo funciona</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Auth Modal -->
+  <dialog id="authModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="authTitle">Ingresar</h3>
+        <button id="closeAuth" class="icon" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Login</button>
+        <button class="tab" data-tab="signup">Registro</button>
+      </div>
+      <div class="tab-panels">
+        <form id="loginForm" class="tab-panel active" data-panel="login">
+          <label>Correo</label><input name="email" type="email" required />
+          <label>Contraseña</label><input name="password" type="password" required />
+          <button class="btn primary full" type="submit">Ingresar</button>
+        </form>
+        <form id="signupForm" class="tab-panel" data-panel="signup">
+          <label>Nombre</label><input name="name" required />
+          <label>Correo</label><input name="email" type="email" required />
+          <label>Contraseña</label><input name="password" type="password" required />
+          <button class="btn full" type="submit">Crear cuenta</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
