@@ -1,5 +1,5 @@
 # CicloSmart — Prototipo de Marketplace (Front‑end)
-**Objetivo:** Demostrar el flujo tipo OffloadIT con marca *CicloSmart* (comprar/vender sobrantes de obra).  
+**Objetivo:** Demostrar el flujo de la marca *CicloSmart* (comprar/vender sobrantes de obra).  
 **Stack:** HTML, CSS, JS (sin frameworks).  
 **Persistencia:** `localStorage` (sólo demo).
 
