@@ -14,6 +14,7 @@ const app = {
     this.load();
     this.seed();
     this.cache();
+    if(this.mapEl) this.initMap();
     this.bind();
     this.renderAll();
   },
@@ -33,6 +34,10 @@ const app = {
     this.cartDrawer = $('#cartDrawer'); this.closeCart = $('#closeCart');
     this.cartItems = $('#cartItems'); this.cartSubtotal = $('#cartSubtotal');
     this.cartShipping = $('#cartShipping'); this.cartTotal = $('#cartTotal');
+
+    this.preDemoForm = $('#preDemoForm');
+    this.preDemoResult = $('#preDemoResult');
+    this.mapEl = $('#csMap');
 
     this.sellForm = $('#sellForm');
     this.checkoutForm = $('#checkoutForm');
@@ -60,6 +65,10 @@ const app = {
     // Sell & Checkout
     this.sellForm.addEventListener('submit', e=> this.onSell(e));
     this.checkoutForm.addEventListener('submit', e=> this.onCheckout(e));
+
+    if(this.preDemoForm){
+      this.preDemoForm.addEventListener('submit', e=> this.onPreDemo(e));
+    }
 
     // Auth
     this.loginBtn.addEventListener('click', ()=> this.openAuth());
@@ -338,6 +347,72 @@ const app = {
         <div class="items">Total: <strong>S/ ${o.total.toFixed(2)}</strong> • Envío: ${o.shipping.method}</div>
       </div>`).join('');
   },
+
+  // --- Pre-demolition inventory demo (IA simplificada) ---
+  onPreDemo(e){
+    e.preventDefault();
+    const form = e.target;
+    const fd = new FormData(form);
+    const area = parseFloat(fd.get('area') || '0');
+    const reusePct = parseFloat(fd.get('reusePct') || '0');
+    const structureType = fd.get('structureType');
+    const buildingName = fd.get('buildingName') || 'Edificio sin nombre';
+    const location = fd.get('location') || 'Ubicación no definida';
+
+    if(!area || area <= 0){
+      this.toastMsg('Ingresa un área válida', 'error');
+      return;
+    }
+
+    const baseValuePerM2 = structureType === 'Estructura metálica' ? 35 :
+                           structureType === 'Concreto armado' ? 28 : 20;
+
+    const reusableArea = area * (reusePct / 100);
+    const estimatedValue = reusableArea * baseValuePerM2;
+
+    const kgCO2PerM2 = structureType === 'Estructura metálica' ? 18 :
+                       structureType === 'Concreto armado' ? 14 : 10;
+    const co2Saved = reusableArea * kgCO2PerM2;
+
+    let recommendation;
+    if(reusePct >= 50){
+      recommendation = 'Alta oportunidad de reutilización. Priorizar desmontaje selectivo y venta directa en marketplace.';
+    }else if(reusePct >= 25){
+      recommendation = 'Oportunidad media. Combinar reutilización con reciclaje especializado.';
+    }else{
+      recommendation = 'Baja reutilización. Recomendable enfocar en reciclaje y acuerdos con gestores autorizados.';
+    }
+
+    if(this.preDemoResult){
+      this.preDemoResult.hidden = false;
+      this.preDemoResult.innerHTML = `
+        <div class="order">
+          <div class="head">
+            <div>${buildingName}</div>
+            <div>${location}</div>
+          </div>
+          <div class="items">
+            Área útil analizada: <strong>${area.toLocaleString()} m²</strong> •
+            Potencial reutilizable: <strong>${reusePct}% (${reusableArea.toFixed(0)} m²)</strong>
+          </div>
+          <div class="items">
+            Valor estimado de materiales recuperables:
+            <strong>USD ${estimatedValue.toFixed(0)}</strong>
+          </div>
+          <div class="items">
+            CO₂ evitado (estimado):
+            <strong>${co2Saved.toFixed(0)} kg</strong>
+          </div>
+          <div class="items" style="margin-top:8px">
+            IA CicloSmart (demo): ${recommendation}
+          </div>
+        </div>`;
+    }
+  },
+
+  // --- GIS demo map ---
+  initMap(){ /* GIS demo offline: no external map library required */ },
+
   // --- Utils ---
   toastMsg(msg, type='info'){
     this.toast.textContent = msg;

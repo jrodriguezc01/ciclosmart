@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CicloSmart | Marketplace de sobrantes de construcción</title>
+  <title>CicloSmart | Plataforma de Minería Urbana Digital</title>
   <meta name="description" content="CicloSmart — Compra y vende materiales sobrantes de obra. Reduce costos, residuos y tiempos con un marketplace ágil y seguro." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"><script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
 </head>
 <body>
   <header class="header">
     <div class="container header-inner">
       <a class="brand" href="#home" aria-label="CicloSmart Inicio">
-        <img class="logo-image" src="assets/logo-ciclosmart.svg" alt="CicloSmart" width="40" height="40" />
-          <span class="brand-name">CicloSmart</span>
+        <img src="logo-ciclosmart.svg" alt="CicloSmart" class="logo-img" />
+        <span class="brand-name">CicloSmart</span>
       </a>
       <nav class="nav">
         <a href="#catalogo" class="nav-link">Catálogo</a>
@@ -38,28 +42,124 @@
     <section id="home" class="hero">
       <div class="container hero-inner">
         <div class="hero-copy">
-          <h1>Convierte tus <span class="accent">sobrantes de obra</span> en oportunidad</h1>
-          <p>Compra y vende materiales nuevos o sin uso: acero, madera, enchapes, pintura, eléctricos y más. Menos desperdicio, más valor.</p>
+          <h1>
+            Minería Urbana Digital <span class="accent">antes de la demolición</span>
+          </h1>
+          <p>
+            CicloSmart levanta inventarios digitales de edificios, georreferencia materiales
+            y estima su valor antes de que se conviertan en residuos. Luego conecta esos
+            materiales con nuevas obras a través de un marketplace circular.
+          </p>
           <div class="hero-actions">
-            <a href="#catalogo" class="btn primary lg">Explorar materiales</a>
-            <a href="#vender" class="btn outline lg">Publicar un sobrante</a>
+            <a href="#inventario" class="btn primary lg">Simular inventario pre-demolición</a>
+            <a href="#catalogo" class="btn outline lg">Ver materiales recuperados</a>
           </div>
           <div class="trust">
-            <span>♻️ Economía circular</span><span>🔒 Operaciones seguras</span><span>🚚 Envíos o recojo</span>
+            <span>♻️ Economía circular real</span>
+            <span>📍 GIS + inventario digital</span>
+            <span>🤖 IA para valor y CO₂</span>
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
           <div class="mock-card">
             <div class="thumb">🧱</div>
-            <div class="lines"><b>Varilla corrugada 3/8"</b><span>Acero • Nuevo • Lima</span><i> $USD 9.50</i></div>
+            <div class="lines"><b>Varilla corrugada 3/8"</b><span>Acero • Nuevo • Lima</span><i>USD 9.50</i></div>
           </div>
           <div class="mock-card">
             <div class="thumb">🎨</div>
-            <div class="lines"><b>Pintura látex 5 gal</b><span>Acabados • Nuevo • Miraflores</span><i> $USD 170.00</i></div>
+            <div class="lines"><b>Pintura látex 5 gal</b><span>Acabados • Nuevo • Miraflores</span><i>USD 170.00</i></div>
           </div>
           <div class="mock-card">
             <div class="thumb">🪵</div>
-            <div class="lines"><b>Madera 2x4</b><span>Madera • Como nuevo • Surco</span><i> $USD 220.00</i></div>
+            <div class="lines"><b>Madera 2x4</b><span>Madera • Como nuevo • Surco</span><i>USD 220.00</i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Pre-demolition Inventory Demo -->
+    <section class="section alt" id="inventario">
+      <div class="container">
+        <div class="section-head">
+          <h2>Simulador de inventario pre-demolición</h2>
+          <p class="muted">Demo funcional de cómo CicloSmart estima valor y CO₂ evitado antes de la demolición.</p>
+        </div>
+
+        <form id="preDemoForm" class="form-grid">
+          <div class="field">
+            <label>Nombre del edificio</label>
+            <input name="buildingName" placeholder="p.ej., Edificio oficinas Av. X" required />
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Área útil (m²)</label>
+              <input name="area" type="number" min="1" required />
+            </div>
+            <div class="field">
+              <label>% estimado de materiales reutilizables</label>
+              <input name="reusePct" type="number" min="0" max="100" value="35" required />
+            </div>
+          </div>
+          <div class="field">
+            <label>Tipo principal de estructura</label>
+            <select name="structureType" required>
+              <option>Concreto armado</option>
+              <option>Estructura metálica</option>
+              <option>Mampostería</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ubicación (distrito / ciudad)</label>
+            <input name="location" placeholder="p.ej., Santiago Centro" required />
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Calcular potencial de recuperación</button>
+          </div>
+        </form>
+
+        <div id="preDemoResult" class="order-result" style="margin-top:16px;" hidden></div>
+      </div>
+    </section>
+
+    <!-- GIS Map -->
+    <section class="section" id="mapa">
+      <div class="container">
+        <div class="section-head">
+          <h2>Mapa de oportunidades de minería urbana</h2>
+          <p class="muted">Visualización GIS de edificios con inventario pre-demolición y materiales listados.</p>
+        </div>
+        
+        <div id="csMap" class="mock-gis">
+          <div class="mock-gis-header">
+            <span class="badge">Demo GIS offline</span>
+            <span class="mock-gis-legend">● Sitio con inventario pre-demolición &nbsp;&nbsp;● Bodega industrial</span>
+          </div>
+          <div class="mock-gis-grid">
+            <div class="block"></div>
+            <div class="block dense"></div>
+            <div class="block"></div>
+            <div class="block"></div>
+            <div class="block"></div>
+            <div class="block"></div>
+
+            <button class="marker marker-a">
+              Edificio oficinas Alameda
+              <span>Inventario completo • 42% reutilización</span>
+            </button>
+            <button class="marker marker-b">
+              Bodega industrial Quilicura
+              <span>Estructura metálica • Alto potencial de acero</span>
+            </button>
+
+            <div class="mock-gis-ctrls">
+              <button class="zoom">+</button>
+              <button class="zoom">−</button>
+            </div>
+            <div class="mock-gis-scale">
+              <span>50 m</span>
+            </div>
           </div>
         </div>
       </div>
@@ -138,7 +238,7 @@
           </div>
           <div class="row">
             <div class="field">
-              <label>Precio ( $USD)</label>
+              <label>Precio (USD)</label>
               <input name="price" type="number" step="0.01" required />
             </div>
             <div class="field">
@@ -163,15 +263,28 @@
     </section>
 
     <!-- How it works -->
+        <!-- How it works -->
     <section class="section" id="como-funciona">
       <div class="container">
         <div class="section-head">
-          <h2>Cómo funciona</h2>
+          <h2>Cómo funciona CicloSmart</h2>
         </div>
         <div class="steps">
-          <div class="step"><span class="step-num">1</span><b>Publica</b><p>Sube tu sobrante con fotos, precio y ubicación.</p></div>
-          <div class="step"><span class="step-num">2</span><b>Acuerda</b><p>Coordina entrega: envío estándar/exprés o recojo.</p></div>
-          <div class="step"><span class="step-num">3</span><b>Listo</b><p>Reduce residuos, recupera costos y gana tiempo.</p></div>
+          <div class="step">
+            <span class="step-num">1</span>
+            <b>Inventario digital del edificio</b>
+            <p>Registramos ambientes y materiales antes de la demolición: tipo, cantidad, estado y potencial de recuperación.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <b>IA + GIS para valor y CO₂</b>
+            <p>La IA estima valor económico y CO₂ evitado, mientras el GIS georreferencia el edificio y sus materiales en la ciudad.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <b>Marketplace circular</b>
+            <p>Publicamos los materiales recuperables en el marketplace y los conectamos con nuevas obras, evitando que se conviertan en residuos.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -185,9 +298,9 @@
       <div id="cartItems" class="cart-items"></div>
       <div class="drawer-foot">
         <div class="totals">
-          <div><span>Subtotal</span><strong id="cartSubtotal"> $USD 0.00</strong></div>
-          <div><span>Envío estimado</span><strong id="cartShipping"> $USD 0.00</strong></div>
-          <div class="grand"><span>Total</span><strong id="cartTotal"> $USD 0.00</strong></div>
+          <div><span>Subtotal</span><strong id="cartSubtotal">USD 0.00</strong></div>
+          <div><span>Envío estimado</span><strong id="cartShipping">USD 0.00</strong></div>
+          <div class="grand"><span>Total</span><strong id="cartTotal">USD 0.00</strong></div>
         </div>
         <a href="#pago" class="btn primary full" id="goCheckout">Proceder al pago</a>
       </div>
@@ -211,9 +324,9 @@
             <div class="field">
               <label>Método de envío</label>
               <select name="shippingMethod" required>
-                <option value="pickup">Recojo ( $USD 0)</option>
-                <option value="standard">Estándar 48–72h ( $USD 20)</option>
-                <option value="express">Exprés 24h ( $USD 35)</option>
+                <option value="pickup">Recojo (USD 0)</option>
+                <option value="standard">Estándar 48–72h (USD 20)</option>
+                <option value="express">Exprés 24h (USD 35)</option>
               </select>
             </div>
             <div class="field">
